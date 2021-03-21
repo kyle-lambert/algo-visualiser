@@ -24,6 +24,8 @@ module.exports = {
     filename: "bundle.js",
   },
   devServer: {
+    hot: true,
     contentBase: path.resolve(__dirname, "./dist"),
+    watchContentBase: true,
   },
 };
