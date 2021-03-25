@@ -1,2 +1,7 @@
 import "./style.css";
-console.log("yes");
+import Controller from "./controller";
+
+document.addEventListener("DOMContentLoaded", function () {
+  const controller = new Controller();
+  controller.init();
+});
