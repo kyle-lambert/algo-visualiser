@@ -1,20 +1,25 @@
-import { CELL_WIDTH, CELL_HEIGHT } from "../config";
-
 export const state = {
   cells: [],
   startCell: null,
   targetCell: null,
 };
 
-export const generateCells = (width, height) => {
-  const rows = Math.floor(height / CELL_HEIGHT);
-  const cols = Math.floor(width / CELL_WIDTH);
+export const generateCells = (rows, cols) => {
   const cells = [];
 
-  for (let i = 0; i < rows; i++) {
+  for (let r = 0; r < rows; r++) {
     const row = [];
-    for (let j = 0; j < cols; j++) {
-      row.push(new Cell(i, j));
+    for (let c = 0; c < cols; c++) {
+      const cell = new Cell(r, c);
+      if (r === Math.floor(rows / 2) && c === 4) {
+        cell.setStart();
+      }
+
+      if (r === Math.floor(rows / 2) && c === cols - 4) {
+        cell.setTarget();
+      }
+
+      row.push(cell);
     }
     cells.push(row);
   }
@@ -24,6 +29,17 @@ export const generateCells = (width, height) => {
 
 class Cell {
   constructor(row, col) {
-    (this.row = row), (this.col = col);
+    this.row = row;
+    this.col = col;
+    this.isStart = false;
+    this.isTarget = false;
+  }
+
+  setStart() {
+    this.isStart = true;
+  }
+
+  setTarget() {
+    this.isTarget = true;
   }
 }
