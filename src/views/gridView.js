@@ -1,41 +1,50 @@
 class GridView {
   constructor() {
-    this._tableElement = document.querySelector("[data-table]");
-    this._tableContainerElement = document.querySelector("[data-table-container]");
+    this._tableElement = document.getElementById("table");
   }
 
-  getWidth() {
-    return this._tableContainerElement.clientWidth;
+  getTableDimensions() {
+    return {
+      width: this._tableElement.clientWidth,
+      height: this._tableElement.clientHeight,
+    };
   }
 
-  getHeight() {
-    return this._tableContainerElement.clientHeight;
-  }
-
-  _clearCells() {
+  _clearGrid() {
     while (this._tableElement.firstChild) {
       this._tableElement.removeChild(this._tableElement.firstChild);
     }
   }
 
-  renderCells(cells) {
-    this._clearCells();
+  _createTableDataElement(row, col) {
+    const td = document.createElement("td");
+    td.dataset.row = row;
+    td.dataset.col = col;
 
-    for (let row = 0; row < cells.length; row++) {
+    const classesToAdd = ["border", "border-gray-300"];
+
+    td.classList.add(...classesToAdd);
+
+    return td;
+  }
+
+  renderGrid(grid) {
+    this._clearGrid();
+
+    for (let row = 0; row < grid.length; row++) {
       const tr = document.createElement("tr");
-      for (let col = 0; col < cells[row].length; col++) {
-        const currentCell = cells[row][col];
-        const td = document.createElement("td");
-        const classesToAdd = ["border", "border-gray-300"];
+      for (let col = 0; col < grid[row].length; col++) {
+        const td = this._createTableDataElement(row, col);
+        const currentCell = grid[row][col];
+
         if (currentCell.isStart) {
-          classesToAdd.push("bg-green-500");
+          td.classList.add("bg-green-500");
         }
+
         if (currentCell.isTarget) {
-          classesToAdd.push("bg-red-500");
+          td.classList.add("bg-red-500");
         }
-        td.classList.add(...classesToAdd);
-        td.dataset.row = row;
-        td.dataset.col = col;
+
         tr.appendChild(td);
       }
       this._tableElement.appendChild(tr);

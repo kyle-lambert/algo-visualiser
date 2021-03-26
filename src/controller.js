@@ -1,20 +1,20 @@
 import GridView from "./views/gridView";
+import SettingsView from "./views/settingsView";
 import * as gridModel from "./models/gridModel";
-import { CELL_WIDTH, CELL_HEIGHT } from "./config";
+import * as settingsModel from "./models/settingsModel";
 
 class Controller {
   constructor() {
     this._gridView = new GridView();
-    this._initialiseGrid();
+    this._settingsView = new SettingsView();
   }
 
   _initialiseGrid() {
-    const rows = Math.floor(this._gridView.getHeight() / CELL_HEIGHT);
-    const cols = Math.floor(this._gridView.getWidth() / CELL_WIDTH);
+    const { width, height } = this._gridView.getTableDimensions();
 
-    gridModel.generateCells(rows, cols);
+    gridModel.computeGrid(width, height);
 
-    this._gridView.renderCells(gridModel.state.cells);
+    this._gridView.renderGrid(gridModel.state.grid);
   }
 
   controlResize() {
@@ -33,11 +33,16 @@ class Controller {
     console.log("mouse move");
   }
 
-  init() {
+  _bindEventHandlers() {
     this._gridView.addResizeHandler(this.controlResize.bind(this));
     this._gridView.addMouseDownHandler(this.controlMouseDown.bind(this));
     this._gridView.addMouseUpHandler(this.controlMouseUp.bind(this));
     this._gridView.addMouseMoveHandler(this.controlMouseMove.bind(this));
+  }
+
+  init() {
+    this._bindEventHandlers();
+    this._initialiseGrid();
   }
 }
 
