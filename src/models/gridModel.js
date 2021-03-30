@@ -3,8 +3,18 @@ import { CELL_WIDTH, CELL_HEIGHT } from "../config";
 
 export const state = {
   grid: [],
+  previousStartCell: null,
   startCell: null,
   targetCell: null,
+  algorithm: null,
+  animationSpeed: null,
+  mousePressed: false,
+  currentlyMoving: null,
+  walls: [],
+};
+
+export const isStart = (row, col) => {
+  return state.grid[row][col].isStart;
 };
 
 export const computeGrid = (width, height) => {
@@ -20,12 +30,12 @@ export const computeGrid = (width, height) => {
 
       if (r === Math.floor(rows / 2) && c === 4) {
         state.startCell = cell;
-        cell.setStart();
+        cell.isStart = true;
       }
 
       if (r === Math.floor(rows / 2) && c === cols - 4) {
         state.targetCell = cell;
-        cell.setTarget();
+        cell.isTarget = true;
       }
 
       row.push(cell);

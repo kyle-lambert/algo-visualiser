@@ -6,12 +6,13 @@ class Cell {
     this.isTarget = false;
   }
 
-  setStart() {
-    this.isStart = true;
-  }
+  removeStartCell() {
+    this.isStart = false;
+    const element = document.querySelector(`[data-coords='${this.row}-${this.col}']`);
 
-  setTarget() {
-    this.isTarget = true;
+    if (!element) return;
+
+    element.classList.remove("bg-green-500");
   }
 }
 

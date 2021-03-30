@@ -1,12 +1,9 @@
 import GridView from "./views/gridView";
-import SettingsView from "./views/settingsView";
 import * as gridModel from "./models/gridModel";
-import * as settingsModel from "./models/settingsModel";
 
 class Controller {
   constructor() {
     this._gridView = new GridView();
-    this._settingsView = new SettingsView();
   }
 
   _initialiseGrid() {
@@ -15,6 +12,8 @@ class Controller {
     gridModel.computeGrid(width, height);
 
     this._gridView.renderGrid(gridModel.state.grid);
+
+    this._gridView.addMouseEnterHandler(this.controlMouseEnter.bind(this));
   }
 
   controlResize() {
@@ -22,22 +21,48 @@ class Controller {
   }
 
   controlMouseDown(e) {
+    // Prevent default browser drag/drop behaviour
+    e.preventDefault();
     console.log("mouse down");
+    gridModel.state.mousePressed = true;
+
+    const coords = e.target.dataset.coords.split("-");
+    const row = coords[0];
+    const col = coords[1];
+
+    const isStart = gridModel.state.grid[row][col].isStart;
+    const isTarget = gridModel.state.grid[row][col].isTarget;
+
+    if (isStart) {
+      gridModel.state.currentlyMoving = "start";
+    } else if (isTarget) {
+      gridModel.state.currentlyMoving = "target";
+    }
   }
 
   controlMouseUp(e) {
-    console.log("mouse up");
+    gridModel.state.mousePressed = false;
+    gridModel.state.currentlyMoving = null;
   }
 
-  controlMouseMove(e) {
-    console.log("mouse move");
+  controlMouseEnter(e) {
+    if (!gridModel.state.mousePressed) return;
+
+    if (gridModel.state.currentlyMoving === "start") {
+      console.log("moving start");
+      const coords = e.target.dataset.coords.split("-");
+      const row = coords[0];
+      const col = coords[1];
+
+      const previousStartElement = gridModel.state.startCell;
+      previousStartElement.removeStartCell();
+    }
   }
 
   _bindEventHandlers() {
     this._gridView.addResizeHandler(this.controlResize.bind(this));
     this._gridView.addMouseDownHandler(this.controlMouseDown.bind(this));
     this._gridView.addMouseUpHandler(this.controlMouseUp.bind(this));
-    this._gridView.addMouseMoveHandler(this.controlMouseMove.bind(this));
   }
 
   init() {

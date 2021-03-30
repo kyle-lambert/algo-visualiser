@@ -18,8 +18,8 @@ class GridView {
 
   _createTableDataElement(row, col) {
     const td = document.createElement("td");
-    td.dataset.row = row;
-    td.dataset.col = col;
+    td.dataset.coords = `${row}-${col}`;
+    td.dataset.type = "cell";
 
     const classesToAdd = ["border", "border-gray-300"];
 
@@ -56,15 +56,16 @@ class GridView {
   }
 
   addMouseDownHandler(handler) {
-    // this._tableElement.addEventListener("mousedown", handler);
+    this._tableElement.addEventListener("mousedown", handler);
   }
 
   addMouseUpHandler(handler) {
-    // this._tableElement.addEventListener("mouseup", handler);
+    window.addEventListener("mouseup", handler);
   }
 
-  addMouseMoveHandler(handler) {
-    // this._tableElement.addEventListener("mousemove", handler);
+  addMouseEnterHandler(handler) {
+    const cellElements = Array.from(this._tableElement.querySelectorAll("[data-type=cell]"));
+    cellElements.forEach((el) => el.addEventListener("mouseenter", handler));
   }
 }
 
