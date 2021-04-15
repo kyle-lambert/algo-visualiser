@@ -69,4 +69,4 @@ class GridView {
   }
 }
 
-export default GridView;
+export default new GridView();
